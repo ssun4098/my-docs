@@ -1,0 +1,96 @@
+# Spring Security란?
+- 인증 및 인가를 제공해주는 프레임워크
+
+# DelegatingFilterProxy
+![FilterChain](/spring/security/Architecture/delegatingfilterproxy.png)
+- DelegatingFilterProxy는 Servlet 스펙의 기술로 Servlet Container와 Spring Container를 연결해준다.
+- 요청을 Spring에 오직 위임만 하는 역할을 한다.
+- 요청이 들어올 때 Filter Bean 조회를 늦출 수 있는 이점이 있다.(필요할 때 생성되기 때문에 애플리케이션 실행속도 향상, 리소스 절약)
+
+## DelegatingFilterProxy.java
+```java
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        Filter delegateToUse = this.delegate;
+        if (delegateToUse == null) {
+            synchronized(this.delegateMonitor) {
+                delegateToUse = this.delegate;
+                if (delegateToUse == null) {
+                    WebApplicationContext wac = this.findWebApplicationContext();
+                    if (wac == null) {
+                        throw new IllegalStateException("No WebApplicationContext found: no ContextLoaderListener or DispatcherServlet registered?");
+                    }
+
+                    delegateToUse = this.initDelegate(wac);
+                }
+
+                this.delegate = delegateToUse;
+            }
+        }
+
+        this.invokeDelegate(delegateToUse, request, response, filterChain);
+    }
+
+    protected void invokeDelegate(Filter delegate, ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        delegate.doFilter(request, response, filterChain);
+    }
+```
+
+# FilterChainProxy
+![FilterChain](/spring/security/Architecture/filterchainproxy.png)
+- 스프링 시큐리티에서 제공하는 특수한 Filter
+- DelegatingFilterProxy에게 요청을 위임받고 실제 보안 처리를 한다.
+- SecurityFilterChain을 List 필드로 가지고 있다.
+- 요청의 URL 패턴에 맞는 SecurityFilterChain을 선택하여 해당 필터로 진입하게 한다.
+
+## FilterChainProxy.java
+```java
+    private List<Filter> getFilters(HttpServletRequest request) {
+        int count = 0;
+        Iterator var3 = this.filterChains.iterator();
+
+        SecurityFilterChain chain;
+        do {
+            if (!var3.hasNext()) {
+                return null;
+            }
+
+            chain = (SecurityFilterChain)var3.next();
+            if (logger.isTraceEnabled()) {
+                ++count;
+                logger.trace(LogMessage.format("Trying to match request against %s (%d/%d)", chain, count, this.filterChains.size()));
+            }
+        } while(!chain.matches(request)); // 요청 url과 맞는 FilterChain를 찾는 코드
+
+        return chain.getFilters();
+    }
+```
+
+
+# FilterChain
+![FilterChain](/spring/security/Architecture/image.png)
+- FilterChain은 인증 및 인가의 과정들을 수행하는 필터들의 집합으로 기본적으로 제공하며 커스텀 필터 또한 추가할 수 있다.
+- 스프링 시큐리티는 Servlet Filters를 기반으로 구성되어 있으며 클라이언트의 요청 URI에 따라 FilterChain을 거치게 된다.
+- 여러 FilterChain이 존재할 수 있으며 FilterChainProxy가 가지고 있음
+
+## SecurityConfig.java
+```java
+    // FilterChain 등록
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return
+            http
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .sessionManagement((sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)))
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .authorizeHttpRequests(authorize -> authorize.requestMatchers("/login/**").permitAll()
+                            .requestMatchers("/v*/api/**").hasAnyAuthority(Grade.ROLE_GENERAL.name(), Grade.ROLE_ADMIN.name()))
+                    .oauth2Login((httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
+                            .successHandler(jwtLoginSuccessHandler)
+                            .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oauth2UserService))))
+                    .build();
+    }
+
+```
+
+# 참고
+[Spring Security 아키텍처](https://docs.spring.io/spring-security/reference/servlet/architecture.html)
