@@ -1,0 +1,40 @@
+# Root 계정 비밀번호를 잊어버렸을 때
+```ssl
+
+// MySQL 중단
+systemctl stop mysqld
+
+# 권한 없이 실행하는 환경 변수 등록
+systemctl set-environment MYSQLD_OPTS="--skip-grant-tables"
+
+# mysql 시작
+systemctl start mysqld
+
+# 접속
+mysql -u root -p
+
+# 무조건 한번 권한 실행
+FLUSH PRIVILEGES;
+
+# 비밀번호 수정
+alter user 'root'@'localhost' identified with mysql_native_password by 'new password';
+
+# 수정 적용
+flush privileges;
+
+# mysql 정지
+systemctl stop mysqld
+
+# 환경변수 삭제
+systemctl unset-environment MYSQLD_OPTS
+
+# 실행
+systemctl start mysqld
+
+```
+
+# mysqld_safe가 없었던 이유?
+다른 사람들의 블로그를 보면 mysqld_safe를 사용했지만 나의 mysql에서는 보이지 않았다. 아래의 링크를 보면 rpm 또는 Debian 패키지에서 MySQL을 설치하면 mysqld_safe가 설치되지 않을 수 있다. 요약하자면
+systemd에서 mysql을 재실행, 정지 등을 지원해주기 때문에 mysqld_safe가 필요없으며 멀티 서버를 관리해주기 때문에 mysqld_multi.server 또한 설치되지 않을 수 있다.
+
+[Systemd에서 mysql 관리](https://dev.mysql.com/doc/refman/8.4/en/using-systemd.html)
