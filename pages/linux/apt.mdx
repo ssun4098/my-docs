@@ -1,0 +1,76 @@
+# APT(Advanced Packaging Tool)
+- Debian기반의 Linux 서버의 소프트웨어 패키지 관리 도구
+- 인터넷을 통하여 필요한 파일을 저장소에서 자동으로 모두 다운로드 해서 설치하는 방식(저장소 URL은 /etc/apt/sources.list 파일)
+
+# dpkg vs apt
+- dpkg는 패키지를 설치하면 해당 패키지만 설치하고 의존하고 있는 패키지는 설치하지 않아 불편한 점이 있다.
+- apt는 deb 파일 저장소애서 의존하고 있는 패키지까지 찾아 설치해준다.
+
+# 기본 사용법
+- "apt -y install 패키지명": -y는 사용자의 확인을 모두 yes로 간주
+- "apt update": 패캐지 목록 업데이트
+- "apt remove/purge 패키지 이름": 패키지 삭제
+
+# apt-cache
+패키지를 설치하기 전에 패키지에 대한 정보나 의존성 문제를 미리 확인
+- "apt-cache show 패키지이름": 패키지 정보 보기
+
+# apt 작동 방식 설정 파일
+![APT 동작원리](/linux/apt/apt.png)
+
+# 우분투 패키지 저장소
+- main: 우분투에서 공식적으로 지원하는 무료 SW
+- universe: 우분투에서 지원하지 않는 무료 SW
+- restricted: 우분투에서 공식적으로 지원하는 유로 SW
+- multiverse: 우분투에서 지원하지 않는 유로 SW
+
+# sources.list
+- 형식: deb 저장소URL 버전코드명 저장소종류
+```ssh
+## Major bug fix updates produced after the final release of the
+## distribution.
+deb http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-updates main restricted
+# deb-src http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-updates main restricted
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team. Also, please note that software in universe WILL NOT receive any
+## review or updates from the Ubuntu security team.
+deb http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal universe
+# deb-src http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal universe
+deb http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-updates universe
+# deb-src http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-updates universe
+
+## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
+## team, and may not be under a free licence. Please satisfy yourself as to
+## your rights to use the software. Also, please note that software in
+## multiverse WILL NOT receive any review or updates from the Ubuntu
+## security team.
+deb http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal multiverse
+# deb-src http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal multiverse
+deb http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-updates multiverse
+# deb-src http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-updates multiverse
+
+## N.B. software from this repository may not have been tested as
+## extensively as that contained in the main release, although it includes
+## newer versions of some applications which may provide useful features.
+## Also, please note that software in backports WILL NOT receive any review
+## or updates from the Ubuntu security team.
+deb http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+# deb-src http://ap-northeast-2.ec2.archive.ubuntu.com/ubuntu/ focal-backports main restricted universe multiverse
+
+## Uncomment the following two lines to add software from Canonical's
+## 'partner' repository.
+## This software is not part of Ubuntu, but is offered by Canonical and the
+## respective vendors as a service to Ubuntu users.
+# deb http://archive.canonical.com/ubuntu focal partner
+# deb-src http://archive.canonical.com/ubuntu focal partner
+
+deb http://security.ubuntu.com/ubuntu focal-security main restricted
+# deb-src http://security.ubuntu.com/ubuntu focal-security main restricted
+deb http://security.ubuntu.com/ubuntu focal-security universe
+# deb-src http://security.ubuntu.com/ubuntu focal-security universe
+deb http://security.ubuntu.com/ubuntu focal-security multiverse
+# deb-src http://security.ubuntu.com/ubuntu focal-security multiverse
+deb [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.5/ubuntu focal main
+# deb-src [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.5/ubuntu focal main
+```
