@@ -1,3 +1,4 @@
 {
-    "initRootPassword": "root 비밀번호 분실"
+    "initRootPassword": "root 비밀번호 분실",
+    "mysql_secure_installation": "Secure Instaillation"
 }
