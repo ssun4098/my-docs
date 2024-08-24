@@ -1,4 +1,5 @@
 {
     "csrf": "CSRF",
-    "dns": "DNS"
+    "dns": "DNS",
+    "raceCondition": "Race Condition"
 }
