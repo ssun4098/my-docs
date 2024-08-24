@@ -1,4 +1,5 @@
 {
     "initRootPassword": "root 비밀번호 분실",
-    "mysql_secure_installation": "Secure Instaillation"
+    "mysql_secure_installation": "Secure Instaillation",
+    "lock": "LOCK(작성중)"
 }
