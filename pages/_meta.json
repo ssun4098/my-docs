@@ -1,8 +1,8 @@
 {
   "index": "Introduction",
   "spring": "Spring",
-  "etc": "ETC",
   "mysql": "MySQL",
   "linux": "Linux",
-  "java": "Java"
+  "java": "Java",
+  "etc": "ETC"
 }
