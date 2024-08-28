@@ -1,0 +1,158 @@
+# 다대다[N:N]
+- 관계형 데이터베이스에서는 다대다를 일대다, 다대일로 풀어낸다.
+- 객체에서는 테이블과 다르게 객체 2개로 다대다 관계를 풀어낼 수 있다.(@ManyToMany)
+
+## 다대다 단방향
+``` java
+
+@Table
+@Entity
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToMany
+    @JoinTable(name = "scrap_post",
+            joinColumns = @JoinColumn(name = "member_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private List<Post> posts = new ArrayList<>();
+}
+
+```
+- @JoinTable.name: 연결 테이블을 지정한다.
+- @JoinTable.joinColumns: 현재 방향인 회원과 매핑할 조인 컬럼 정보를 지정한다.
+- @JoinTable.inverseJoinColumns: 반대 방향인 상품과 매핑할 조인 컬럼 정보를 지정한다.
+@ManyToMany로 매핑한 덕분에 다대다관계를 사용할 때는 이 연결 테이블을 신경 쓰지 않아도 된다.
+
+## 다대다 양방향
+```java
+@Table(name = "post")
+@Entity
+public class Post extends TrackedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
+    private int id;
+
+    @Column(name = "title", length = 128, nullable = false)
+    private String title;
+
+    @Lob
+    @Column(name = "text", nullable = false)
+    private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "use_yn")
+    private UseStatus useStatus;
+
+    // 게시판과 게시글 다대일 관계
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    // 회원과 게시글의 다대다 역방향 추가
+    @ManyToMany(mappedBy = "posts")
+    private List<Member> members;
+}
+```
+- 다대다 방향의 역방향으로 같은 @ManyToMany를 사용
+- mappedBy가 없는 곳으로 연관관계의 주인을 설정(똑같이 mappedBy가 없는 곳이 주인이다.)
+
+# 다대다: 매핑의 한계와 극복, 연결 엔티티 사용
+- @ManyToMany를 사용하면 연결 테이블을 자동으로 처리줘서 편리하다.
+- 하지만 연결 테이블에 추가적인 컬럼이 필요하는 일이 많기 때문에 실무에서 사용이 제한적이다.
+
+## Post 테이블 연결 테이블로 변경
+```java
+@Table(name = "post")
+@Entity
+public class Post extends TrackedEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
+    private int id;
+
+    @Column(name = "title", length = 128, nullable = false)
+    private String title;
+
+    @Lob
+    @Column(name = "text", nullable = false)
+    private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "use_yn")
+    private UseStatus useStatus;
+
+    // 게시판과 게시글 다대일 관계
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    @OneToMany(mappedBy = "post")
+    private List<Scrap> scraps;
+}
+```
+## Member 테이블 연결 테이블로 변경
+```java
+@Table
+@Entity
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @OneToMany(mappedBy = "member")
+    private List<Scrap> scraps;
+}
+```
+
+## 연결 테이블과 연결 테이블 식별자
+```java
+
+// 연결 테이블
+@Table
+@Entity
+@IdClass(ScrapId.class)
+public class Scrap {
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+}
+
+// 연결 테이블의 식별자 클래스
+@EqualsAndHashCode
+public class ScrapId implements Serializable {
+    private String member;
+    private String post;
+}
+```
+
+# 복합 기본키
+연결테이블 Scrap은 기본키가 member_id와 post_id로 이루어진 복합 키다. JPA에서는 복합키를 위한 식별자 클래스를 만들어야한다.
+복합 키를 위한 식별자 클래스는 다음과 같은 특징이 있다.
+- 복합 키는 별도의 식별자 클래스로 만들어야 한다.
+- Serializable을 구현해야 한다.
+- equals와 hashCode 메소드를 구현해야 한다.
+- 기본 생성자가 있어야 한다.
+- 식별자 클래스는 public 이어야 한다.
+- @IdClass와 @EmbeddedId를 사용하는 방법이 있다.
+
+# 다대다 관계의 새로운 기본키
+다른 엔티티와 동일하게 기본 키를 생성하여 사용하는 것도 하나의 방법이다. ORM 매핑 시 복합키를 만들지 않아도 되므로 간단히 매핑을 완성할 수 있다.
+
+# 정리
+- 식별 관계: 받아온 식별자를 기본 키 + 외래 키로 사용
+- 비식별 관계: 받아온 식별자는 외래 키로만 사용하고 새로운 식별자를 추가한다.
