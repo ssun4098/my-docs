@@ -1,5 +1,6 @@
 {
     "entityManager": "엔티티매니저",
     "ManyToOne": "다대일",
-    "OneToOne": "일대일"
+    "OneToOne": "일대일",
+    "ManyToMany": "다대다"
 }
