@@ -1,0 +1,99 @@
+#  식별 관계
+- 부모 테이블의 기본 키를 내려받아서 자식 테이블의 기본 키 + 외래 키로 사용하는 관계
+
+# 비식별 관계
+- 부모 테이블의 기본 키를 내려받아서 자식  테이블의 외래 키로만 사용하는 관계
+
+## 필수적 비식별 관계
+- 외래 키에 NULL을 허용하지 않는다. 연관관계를 필수적으로 맺어야 한다.
+
+## 선택적 비식별 관계
+- 외래 키에 NULL을 허용한다. 연관관계를 맺을지 말지 선택할 수 있다.
+
+# 복합 키: 비식별 관계 매핑
+
+## @IdClass
+```java
+@Entity
+@IdClass(ParentId.class)
+public class Parent {
+    
+    @Id
+    @Column(name = "PARENT_ID1")
+    private String id1;
+
+    @Id
+    @Column(name = "PARENT_ID2")
+    private String id2;
+}
+
+@Getter
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+public class ParentId implements Serializable {
+
+    private String id1;
+    private String id2;
+}
+
+```
+### @IdClass를 사용할 때 식별자 클래스의 조건
+- 식별자 클래스의 속성명과 엔티티에서 사용하는 식별자의 속성명이 같아야 한다.(Parent의 id1과 id2는 ParentId의 id1과 id2의 이름이 같다.)
+- Serializable 인터페이스를 구현해야 한다.
+- equals와 hashcode를 구현해야 한다.
+- 기본 생성자가 필요하다.
+- 식별자 클래스(ParentId)는 public 이어야 한다.
+
+# @EmbeddedId
+
+```java
+
+@Entity
+public class Parent {
+    @EmbeddedId
+    private ParentId parentId;
+}
+
+@Embeddable
+@EqualsAndHashCode
+public class ParentId implements Serializable {
+
+    @Column(name = "PARENT_ID1")
+    private String id1;
+
+    @Column(name = "PARENT_ID2")
+    private String id2;
+
+}
+
+```
+- @IdClass가 DB에 맞춘 방법이라면 @EmbeddedId는 좀 더 객체지향적인 방법이다.
+- @EmbeddedId는 식별자 클래스에 기본 키를 직접 매핑한다.
+
+### @EmbeddedId를 사용할 때 식별자 클래스의 조건
+- @EmbeddedId 어노테이션 사용
+- Serializable 인터페이스를 구현해야 한다.
+- equals와 hashcode를 구현해야 한다.
+- 기본 생성자가 필요하다.
+- 식별자 클래스(ParentId)는 public 이어야 한다.
+
+# @IdClass vs @EmbeddedId
+- 각각 장단점이 있으며 일관되게 사용이 중요
+- @EmbeddedId가 좀 더 객체지향적으로 보이지만 특정 상황에 JPQL이 조금 더 길어질 수 있다.
+- 복합키에는 @GenerateValue를 사용할 수 없다.
+
+# 식별관계보다는 비식별관계를 선호
+DB에서는 아래와 같은 이유로 비식별 관계를 선호한다.
+- 식별관계는 부모 테이블의 기본 키를 자식 테이블로 전파하면서 자식 테이블의 기본 키 컬럼이 점점 늘어난다.(늘어나면서 쿼리의 조인이 늘어나는 등 SQL이 복잡해지고 기본 키 인덱스가 불필요하게 커질 수 있다.)
+- 식별관계는 보통 2개 이상의 컬러믕ㄹ 합해서 복합 기본 키 생성
+- 식별 관계는 보통 비지니스 의미가 있는 자연 키 컬럼을 조합하는 경우가 많은데 비즈니스 요구사항이 변경된 경우 대처하기 힘듬(변경된 사항이 손자까지 변경되어야함)
+- 식별 관계는 부모 테이블의 기본 키를 자식 테이블의 기본 키로 사용하므로 비식별 관계보다 테이블 구조가 유연하지 못한다.
+객체지향에서는 아래와 같은 이유로 비식별 관계를 선호한다.
+- 일대일 관계를 제외하고 식별 관계는 2개 이상의 컬럼을 묶는 기본 키를 사용하는데 기본 키가 하나인 것 보다는 많은 노력이 필요하다.
+- 비식별 관계의 기본 키는 주로 대리 키를 사용하는데 JPA는 @GenerateValue처럼 대리 키를 생성하기 위한 편리한 방법을 제공한다.
+
+식별관계는  기본 키 인덱스를 활용하기 좋고, 상위 테이블의 기본 키 컬럼을 자식, 손자 테이블들이 가지고 있어 특정 상황에 조인 없이 조회할 수 있다.
+
+# 선택적 비식별보다 필수적 비식별 관계를 선호
+- NULL을 허용할 경우 외부 조인을 해야하는데 허용하지 않을 경우 내부 조인만 사용해도 된다.
