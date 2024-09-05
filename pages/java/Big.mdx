@@ -1,0 +1,45 @@
+# BigInteger
+- 가장 큰 정수형 long은 최대 10진수 19자리까지 표현할 수 있다.
+- 더 큰 값을 다루기 위해 탄생된 것이 BigInteger이다.
+- 내부적으로 int배열을 사용해서 값을 다루며 long보다 큰 값을 다룰 수 있지만 성능은 더욱 떨어진다.
+- 내부 int 배열이 final로 불변객체이다.
+
+## 타입 변환
+- intValue(), longValue() ... 등 기본형으로 변환할 수 있다.
+- intValueExact(), longValueExact 등 Exact로 끝나는 함수들은 변환한 결과가 변환한 타입의 범위에 속하지 않으면 Exception이 발생한다.
+
+## 연산
+- 위에서 불변이라고 설명했듯이 연산 메서드를 수행하면 새로운 BigInteger 객체가 생성된다.
+- add(BigInteger val): 덧셈
+- substract(BigInteger val): 뺄셈
+- multiply(BigInteger val): 곱셈
+- divide(BigInteger val): 나눗셈
+- abs(): 절댓값
+
+## 비트연산
+- bitCount(): 2진수 기준, 1의 갯수를 반환
+- bitLength(): 2진수 기준, 값을 표현하는데 필요한 bit수
+
+# BigDeciaml
+- float와 double은 정확한 값이 아닌 근삿값을 담고 있는 부동소수 타입이다.
+- 정확한 값을 표현하기 위해 BigDeciaml이 나왔으며 BigInteger과 같이 불변 객체이다.
+
+
+```java
+public class BigDecimal extends Number implements Comparable<BigDecimal> {
+
+    private final BigInteger intVal; // 정수
+
+    private final int scale; // 지수
+
+
+
+    private transient int precision; // 정수의 자릿수
+
+    private final transient long intCompact; // 크기가 작을 경우 intVal이 아닌 intCompact에 저장해 메모리를 최적화
+```
+
+## BigDecimal 주의할점
+- 문자열로 생성하기: double로 생성할 경우 double의 근삿값으로 인해 정확한 값이 생성되지 않을 수 있다.
+- 소숫점 처리 전략: 특정 메서드의 경우 소수점에 에러가 나오기 때문에 적절한 처리 전략 필요
+- 동등성 비교: equals는 값과 소수점 이하의 자릿수를 모둡 비교하며 compareTo는 값만 비교한다.

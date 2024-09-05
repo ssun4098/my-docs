@@ -4,8 +4,8 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -216.5384,
-    "scrollLeft": -230.7875,
+    "scrollTop": -235.5384,
+    "scrollLeft": -156,
     "zoomLevel": 0.85,
     "show": 431,
     "database": 4,
@@ -231,20 +231,20 @@
       "KLryvet8imzvKLbg7qknr": {
         "id": "KLryvet8imzvKLbg7qknr",
         "tableId": "s2PR_kfgdL1v9p-a5QYQu",
-        "name": "int",
+        "name": "horsepower",
         "comment": "마력",
         "dataType": "INT",
         "default": "0",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 60,
+          "widthName": 65,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1725368974736,
+          "updateAt": 1725457491564,
           "createAt": 1725368954942
         }
       },
@@ -291,20 +291,20 @@
       "fYVD8PnQUVebZMHbxO6c8": {
         "id": "fYVD8PnQUVebZMHbxO6c8",
         "tableId": "s2PR_kfgdL1v9p-a5QYQu",
-        "name": "as",
+        "name": "attack_speed",
         "comment": "공격속도",
         "dataType": "INT",
         "default": "0",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 60,
+          "widthName": 71,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1725369069096,
+          "updateAt": 1725458746344,
           "createAt": 1725368956737
         }
       },
@@ -531,20 +531,20 @@
       "Gje0atx4LtazSQDuYwPtl": {
         "id": "Gje0atx4LtazSQDuYwPtl",
         "tableId": "j91CJJZNOO_SCRlx5xl4E",
-        "name": "int",
+        "name": "horsepower",
         "comment": "",
         "dataType": "INT",
         "default": "0",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 60,
+          "widthName": 65,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1725369942736,
+          "updateAt": 1725458714569,
           "createAt": 1725369806319
         }
       },
@@ -591,20 +591,20 @@
       "gacU4MObRKelij1-fG4Ld": {
         "id": "gacU4MObRKelij1-fG4Ld",
         "tableId": "j91CJJZNOO_SCRlx5xl4E",
-        "name": "as",
+        "name": "attack_speed",
         "comment": "",
         "dataType": "INT",
         "default": "0",
         "options": 8,
         "ui": {
           "keys": 0,
-          "widthName": 60,
+          "widthName": 71,
           "widthComment": 60,
           "widthDataType": 60,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1725369946928,
+          "updateAt": 1725458750832,
           "createAt": 1725369851556
         }
       },
@@ -740,7 +740,7 @@
           "columnIds": [
             "ZrfrP8VoPnckZGIcTowEo"
           ],
-          "x": 556.7778000000001,
+          "x": 567.7778000000001,
           "y": 627.4722,
           "direction": 2
         },
@@ -824,7 +824,7 @@
           "columnIds": [
             "7H3Vt9aCVL2HntYMr0kUx"
           ],
-          "x": 1406.9444,
+          "x": 1412.4444,
           "y": 366.5417,
           "direction": 8
         },
@@ -943,7 +943,7 @@
       1725368954942,
       -1,
       {
-        "name": 1725368962704,
+        "name": 1725457491563,
         "dataType": 1725368966097,
         "options(notNull)": 1725368968534,
         "default": 1725368971113,
@@ -979,7 +979,7 @@
       1725368956737,
       -1,
       {
-        "name": 1725369056128,
+        "name": 1725458746344,
         "dataType": 1725369059225,
         "options(notNull)": 1725369061270,
         "default": 1725369063096,
@@ -1144,7 +1144,7 @@
       1725369806319,
       -1,
       {
-        "name": 1725369923119,
+        "name": 1725458714568,
         "options(notNull)": 1725369923119,
         "dataType": 1725369925207,
         "default": 1725369942736,
@@ -1178,7 +1178,7 @@
       1725369851556,
       -1,
       {
-        "name": 1725369859304,
+        "name": 1725458750832,
         "options(notNull)": 1725369910813,
         "dataType": 1725369932126,
         "default": 1725369946928

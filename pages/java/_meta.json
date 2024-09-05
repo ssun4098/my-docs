@@ -1,4 +1,5 @@
 {
     "jvmjrejdk": "JDK, JRE 차이",
-    "memory": "개요"
+    "memory": "개요",
+    "Big": "BigInteger와 BigDecimal"
   }
