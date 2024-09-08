@@ -1,0 +1,39 @@
+# SELinux
+- 보안에 취약한 리눅스를 보호하기 위해 탄생
+- Linux Kernel 보안 모듈이라고도 불림
+- 강제(Enforcing), 허용(Permissive), 비활성(Disabled) 세가지 레벨
+-- 강제: 시스템 보안에 영향을 미치는 기능이 감지되면 그 기능이 작동되지 않도록 시스템에서 막아줌
+-- 허용: 시스템 보안에 영향을 미치는 기능이 감지되면 허용은 되지만 그 내용이 로그에 남음
+-- 비활성: SELinux를 사용하지 않음
+- /etc/sysconfig/selinux를 편집하거나 system-config-selinux 명령으로 설정
+
+# SELinux 모드를 강제로 변경 및 상태확인
+```bash
+setenforce 1  # 강제 모드
+setenforce 0  # 허용 모드
+
+# 상태확인
+getenforce 
+sestatus
+
+```
+
+# Security Context(Security Label)
+- 모든 프로세스와 객체마다 보안 컨텍스트(혹은 보안 레이블)라고 부르는 정보를 부여하여 관리한다.
+- 사용자, 역할, 타입, 레벨이라는 4가지 요소로 구성된다.
+-- 사용자: 시스템의 사용자와는 별도의 SELinux 사용자이며 역할이나 레벨과 연계하여 접근 권한을 관리하는데 사용.
+-- 역할(Role): 하나 혹은 그 이상의 타입과 연결되어 SELinux 의 사용자의 접근을 허용할 지 결정하는데 사용
+-- 타입(Type): Type Enforcement의 속성중 하나로 프로세스의 도메인이나 파일의 타입을 지정하고 이를 기반으로 접근 통제를 수행
+-- 레벨(level): MLS(Multi Level Security) 정책을 사용하여 보완성을 더욱 강화할 때 사용됨
+- SELinux가 활성되면서 ls, ps, cp, mv 등의 명령어에 -Z, --context 옵션이 추가되어 컨텍스트를 확인할 수 있다.
+
+# chcon
+- change context의 약자로 SELinux 컨텍스트를 변경한다.
+
+```bash
+# 특정 파일의 컨텍스트를 지정된 타입으로 변경
+chcon -t httpd_sys_content_t /var/www/html/index.html
+
+# 지정된 사용자, 역할, 타입, 레벨로 컨텍스트를 변경
+chcon -u system_u -r object_r -t httpd_sys_content_t -l s0 /var/www/html/index.html
+```
