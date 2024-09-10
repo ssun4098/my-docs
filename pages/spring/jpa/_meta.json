@@ -3,5 +3,6 @@
     "ManyToOne": "다대일",
     "OneToOne": "일대일",
     "ManyToMany": "다대다",
-    "OverrideMapping": "상속관계 매핑"
+    "OverrideMapping": "상속관계 매핑",
+    "Proxy": "프록시"
 }
