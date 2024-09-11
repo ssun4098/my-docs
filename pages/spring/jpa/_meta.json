@@ -4,5 +4,6 @@
     "OneToOne": "일대일",
     "ManyToMany": "다대다",
     "OverrideMapping": "상속관계 매핑",
-    "Proxy": "프록시"
+    "Proxy": "프록시",
+    "Loading": "지연로딩과 즉시로딩"
 }
