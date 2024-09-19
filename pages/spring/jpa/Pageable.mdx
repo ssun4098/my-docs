@@ -1,0 +1,21 @@
+# Pageable
+- spring-data-jpa안의 spring-data-common에 있는 클래스(spring-data의 모든 클래스에 기본으로 들어있는 의존성)
+- 페이지네이션을 지원해주는 스프링 프레임워크의 클래스
+- page, size, sort 파라미터를 기본으로 받는다.
+
+# 자동설정
+- SpringDataWebAutoConfiguration에서 기본 값을 설정해준다.
+```properties
+spring.data.web.pageable.default-page-size=20         # Default page size.
+spring.data.web.pageable.max-page-size=2000           # Maximum page size to be accepted.
+spring.data.web.pageable.one-indexed-parameters=false # Whether to expose and assume 1-based page number indexes.
+spring.data.web.pageable.page-parameter=page          # Page index parameter name.
+spring.data.web.pageable.prefix=                      # General prefix to be prepended to the page number and page size parameters.
+spring.data.web.pageable.qualifier-delimiter=_        # Delimiter to be used between the qualifier and the actual page number and size properties.
+spring.data.web.pageable.size-parameter=size          # Page size parameter name.
+spring.data.web.sort.sort-parameter=sort              # Sort parameter name.
+```
+
+# @DefaultPageable
+- 위의 자동설정은 전체적인 설정이라면 이 에너테이션은 개별설정을 지원해준다.
+- page, size, sort의 기본값을 설정할 수 있다.
