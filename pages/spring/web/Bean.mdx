@@ -1,0 +1,21 @@
+1. 스프링 빈(Spring Bean): 스프링 빈은 객체와 이름, 클래스 타입 정보가 스프링 컨테이너로 관리되는 객체를 의미
+2. 자바 빈(Java Bean): 기존 생성자가 선언되며, getter/setter 패턴으로 클래스 내부 속성에 접근할 수 있어야 하며 Serializable 구현
+3. DTO: 소프트웨어 사이에 데이터를 전달하는 객체, 내부에 비즈니스 로직이 없음
+4. VO: 특정 데이터를 추상화, 대표적으로 돈을 특정하는 Money로 DDD에서는 불변 속성이 있다.
+
+# @Bean vs @Component
+- @Bean은 외부 라이브러리들을 Bean으로 등록하고 싶은 경우에 사용
+- 개발자가 직접 컨트롤이 가능한 Class들의 경우엔 @Component 사용
+- 아래를 보면 @Bean은 타켓이 Type이 없다. 즉 Class에 선언할 수 없다.
+
+## @Bean
+```java
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Bean {
+
+```
+
+# 참고
+[기억보단 기록을](https://jojoldu.tistory.com/27)

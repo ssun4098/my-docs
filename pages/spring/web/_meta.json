@@ -1,3 +1,4 @@
 {
-    "modelAttrubite": "ModelAttrubite"
+    "modelAttrubite": "ModelAttrubite",
+    "Bean": "@Bean vs @Component"
 }
