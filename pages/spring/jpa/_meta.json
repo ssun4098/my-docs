@@ -6,5 +6,6 @@
     "OverrideMapping": "상속관계 매핑",
     "Proxy": "프록시",
     "Loading": "지연로딩과 즉시로딩",
-    "Pageable": "Pageable"
+    "Pageable": "Pageable",
+    "Cascade": "영속성 전이"
 }
