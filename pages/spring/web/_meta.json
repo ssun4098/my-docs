@@ -1,4 +1,5 @@
 {
     "modelAttrubite": "ModelAttrubite",
-    "Bean": "@Bean vs @Component"
+    "Bean": "@Bean vs @Component",
+    "resttemplateEncode": "RestTemplate 인코딩 막기"
 }

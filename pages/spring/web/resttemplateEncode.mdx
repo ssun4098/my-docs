@@ -1,0 +1,11 @@
+# RestTemplate 에서 파라미터 인코딩 막기
+```java
+    public RestTemplate restTemplate() {
+        DefaultUriBuilderFactory defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+        defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
+        return restTemplate;
+    }
+
+```
