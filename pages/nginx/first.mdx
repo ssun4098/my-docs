@@ -1,0 +1,34 @@
+# 엔진엑스 기초
+
+## 설치 상태 점검
+```bash
+# 버전 확인
+nginx -v
+
+nginx version: nginx/1.xx
+
+# nginx 프로세스 확인
+ps -ef | grep nginx
+```
+엔진엑스가 정상적으로 실행 중이라면 항상 *Master* 프로세스 1개, *Worker* 프로세스 1개가 실행해야 한다. 데몬으로 실행하려면 init.d나 systemd를 이용해야한다.
+
+## 주요 설정 파일, 디렉토리, 명령어
+
+### /etc/nginx/
+- 엔진엑스 서버가 사용하는 기본 설정이 저장된 루트 디렉터리
+
+### /etc/nginx/nginx.conf
+- 엔진엑스 기본 설정 파일, 모든 설정에 대한 진입점
+- 워커 프로세스 개수, 튜닝, 동적 모듈 적재와 같은 설정 항목을 포함
+- 다른 엔진엑스 세부 설정 파일 참조 지정
+- 엔진엑스 관련 모든 디렉토리 위치 설정을 포함하는 httpd 블럭을 가짐
+
+### /etc/nginx/conf.d/
+- 기본 HTTP 서버 설정 파일을 포함
+- 디렉토리 내 conf 확장자 파일은 위의 nginx.conf 파일이 가진 최상위 http 블록에 포함
+- conf.d 대신 site-enabled가 대신 있거나 symlink를 통해 site-available 디렉터리에 저장된 설정 파일들이 연결될 수 있다.
+
+### /var/log/nginx
+- 엔진엑스 로그가 저장되는 디렉토리, access.log와 error.log 파일이 있음
+- debug 모듈을 활성화하면 디버그 정보도 error 로그 파일에 기록
+
