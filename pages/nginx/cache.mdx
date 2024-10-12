@@ -1,0 +1,51 @@
+# 캐시 영역
+```conf
+http {
+    proxy_cache_path /var/cache/nginx/proxy_cache levels=1:2 keys_zone=my_cache:10m max_size=1g inactive=60m use_temp_path=off;
+
+    server {
+        location / {
+            proxy_cache my_cache;
+            proxy_pass http://backend;
+            proxy_cache_valid 200 302 10m;
+            proxy_cache_valid 404 1m;
+            add_header X-Cache-Status $upstream_cache_status;
+        }
+    }
+}
+```
+proxy_cache_path 지시자를 사용해 공유 메모리 캐시 영역을 정의하고 콘텐츠의 위치 지정하며 proxy_cache_path는 http 블록에서만 유효하며
+proxy_cache 지시자 http, server, location 컨텍스트에서만 사용가능합니다.
+
+## proxy_cache_path 매개변수
+- path: 캐시 데이터를 저장할 디렉터리 경로를 지정
+- levels: 디렉토리 계층 구조를 정의, levels=1:2는 첫 번째 디렉터리의 하위에 두 개의 서브 디렉터리를 생성해 캐시 파일을 분산시켜 저장
+- keys_zone: 캐시 메모리 영역 지정, my_cache:10m는 my_cache에 10MB를 사용한다.
+- inactive: 일정 기간 동안 접근되지 않은 캐시 파일을 삭제하는 설정, inactive=60m은 60분 동안 요청이 없는 캐시 파일을 삭제
+- use_temp_path: 임시 파일을 캐시 디렉터리 내에서 생성, on이면 proxy_temp_path에 지정된 경로를 사용해 임시 파일을 저장
+
+# 캐시 락
+생성 중인 캐시에 대한 동일한 요청이 들어오면 한번에 하나의 요청을 통해서만 캐시가 만들어지도록 한다. 동일한 요청이 들어오면 lock을 걸고
+timeout 시간을 걸고 해당 시간이 지날 경우 캐시가 아닌 업스트림 서버로 요청을 보낸다.
+```conf
+proxy_cache_lock on;
+proxy_caahe_lock_age 10s; # 캐시 생성 시간
+proxy_cache_lock_timeout 30s;  # 캐시 락 시간
+```
+
+# 캐시 우회
+서비스를 운영하다 보면 캐시를 하면 안되는 상황이 일어날 수 있다. 이럴 때 HTTP 특정 헤더값을 0이 아닐 때  엔진엑스 캐시를 우회하도록 지정한다.
+```conf
+    proxy_cache_bypass $http_cache_bypass; # cache_bypass 라는 HTTP 요청 헤더값이 0이 아닐 때 우회
+```
+
+# 캐시 성능
+```conf
+location ~* \.(css|js)$ {
+    expires 1m;
+    add_header Cache-Control "public";
+}
+```
+사용자 환경에 유효한 Cache-Control을 사용한다.
+- expires: 캐시 기간
+- add_header: public으로 지정하면 사용자에게 콘텐츠가 전달되는 중간에 위치한 어떤 캐시 서버라도 리소스를 캐시 할 수 있다. private이면 사용자 로컬에서만 캐시한다.

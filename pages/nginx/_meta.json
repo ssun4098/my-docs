@@ -1,5 +1,7 @@
 {
     "cli": "명령어 모음",
     "first": "NGINX 쿡북 1장",
-    "second": "NGINX 쿡북 2장"
+    "second": "NGINX 쿡북 2장",
+    "cache": "캐싱",
+    "log": "로깅 남기기"
 }

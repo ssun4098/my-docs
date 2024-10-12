@@ -1,0 +1,46 @@
+# 접근 로그 설정
+``` conf
+http {
+    log_format log_name
+        '
+        $remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" $request_time
+        '
+    access_log log_name json_escape_format; # JSON 형식일 시 선언
+    error_log log_name;
+}
+```
+http 모듈에 log_format으로 원하는 형태의 로그를 로그명과 같이 선언하고 access_log나 error_log에서 사용할 수 있다.
+
+# 로그 관련 정보
+## 기본 요청 정보
+- $remote_addr: 클라이언트의 IP 주소
+- $remote_port: 클라이언트의 포트 번호
+- $remote_user: HTTP 인증된 사용자 이름
+- $request: 요청의 전체 줄 (예: GET /index.html HTTP/1.1)
+- $request_uri: 요청된 URI (쿼리 문자열 포함)
+- $request_method: 요청 메서드 (예: GET, POST)
+- $request_body: 요청 본문
+- $query_string: 쿼리 문자열 (없으면 빈 문자열)
+- $server_protocol: 요청된 프로토콜 (예: HTTP/1.1)
+- $server_addr: 서버의 IP 주소
+- $server_port: 서버의 포트 번호
+- $scheme: 요청 스키마 (http 또는 https)
+## 응답 정보
+- $status: 응답 상태 코드 (예: 200, 404)
+- $body_bytes_sent: 응답 본문의 바이트 수 (헤더 제외)
+- $bytes_sent: 전송된 총 바이트 수 (본문 + 헤더)
+- $http_referer: Referer 요청 헤더 값
+- $http_user_agent: User-Agent 요청 헤더 값
+- $sent_http_content_type: 응답의 Content-Type 헤더 값
+- $sent_http_location: 응답의 Location 헤더 값
+## 타이밍 정보
+- $request_time: 요청 처리 시간 (초 단위)
+- $upstream_response_time: 백엔드 서버에서 응답하는 데 걸린 시간
+- $upstream_connect_time: 백엔드 서버와의 연결 시간
+- $upstream_header_time: 백엔드 서버의 헤더 응답 시간
+- $msec: 현재 시간 (Unix epoch 형식으로 초 단위)
+
+# 참고 링크
+[NGINX 링크](https://nginx.org/en/docs/http/ngx_http_log_module.html#example)
