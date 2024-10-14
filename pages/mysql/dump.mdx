@@ -1,0 +1,26 @@
+# Local에서 특정 DB Dump
+```sql
+mysqldump -u username -p databasename > filename.sql
+```
+
+# 외부 DB Dump
+``` sql
+mysqldump -h host -u username -p databasename > filename.sql
+```
+
+# 여러 DB Dump
+```sql
+mysqldump -u username -p --databases [옵션] DB1 [DB2 DB3…]
+```
+
+# 모든 테이블 Dump
+```sql
+mysqldump [옵션] --all-databases [옵션] > filename.sql
+```
+
+# Dump한 데이터를 import
+```sql
+mysql -u username -p < ./filename.sql
+```
+# 참고페이지
+[MYSQL 공식 홈페이지](https://dev.mysql.com/doc/refman/8.4/en/mysqldump.html)
