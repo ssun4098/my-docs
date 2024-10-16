@@ -1,3 +1,4 @@
 {
-    "jsx": "JSX"
+    "jsx": "JSX",
+    "useState": "useState"
 }
