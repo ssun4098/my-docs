@@ -1,0 +1,103 @@
+# JSX
+- 리액트에서 생김새를 정의할 떄 사용하는 문법
+- 리액트 컴포넌트 파일에서 XML 형태로 코드를 작성하면 babel이 JSX를 Javascript로 변환
+```javascript
+return <h1>Hello World</h1>
+```
+
+## 태그를 꼭 닫아라
+HTML에서는 input 또는 br 태그를 사용할 때 닫지 않기도 하는데 리액트에서는 허용하지 않는다.
+
+## 하나의 태그로 감싸라
+JSX에서는 꼭 하나의 태그로 감싸서 선언해야 한다. 하지만 이렇게 불필요한 div로 감싸는 것은 추천하지 않는다. 예를들어 테이블 관련 태그를 작성할 때<br />
+div 태그로 감싸면 곤란하기 때문에 아래와 같이 리액트의 Fragment(<></>)를 사용하면 된다.
+
+### 불필요한 DIV
+```javascript
+return (
+    <div>
+        <h1>Hello World</h1>
+        <h1>Hello World</h1>
+    </div>
+)
+```
+
+### Fragment 사용
+```javascript
+return (
+    <>
+        <h1>Hello World</h1>
+        <h1>Hello World</h1>
+    </>
+)
+```
+
+## JSX에서 자바스크립트 값 사용
+JSX 내부에서 javascript 변수를 보여줄 때 {} 로 감싸서 선언한다.
+```javascript
+function App() {
+    const name = "kim";
+    return (
+        <>
+            {name}
+        </>
+    )
+}
+```
+
+## style과 className
+
+### style
+인라인 스타일은 background-color과 같이 -으로 구분되어 있는 이름을 backgroundColor처럼 camelCase형태로 선언해야 한다.
+```javascript
+function App() {
+    const name = "kim";
+    const style = {
+        fontSize: 10px,
+        padding: 1px
+    }
+    return (
+        <>
+            <div style={style}>{name}</div>
+        </>
+    )
+}
+```
+
+### className
+class를 설정할 때는 class= 가 아닌 className으로 설정해야 한다.
+```javascript
+function App() {
+    const name = "kim";
+    const style = {
+        fontSize: 10px,
+        padding: 1px
+    }
+    return (
+        <>
+            <div style={style} classNAme="my-class">{name}</div>
+        </>
+    )
+}
+```
+
+## 주석
+JSX 내부의 주석은 {/* 이런 형식*/} 이렇게 작성해야 한다.
+```javascript
+{/*
+    주석이다.
+*/}
+
+function App() {
+    const name = "kim";
+    const style = {
+        fontSize: 10px,
+        padding: 1px
+    }
+    return (
+        <>
+            <div style={style} classNAme="my-class">{name}</div>
+        </>
+    )
+}
+```
