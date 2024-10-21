@@ -1,4 +1,5 @@
 {
     "jsx": "JSX",
-    "useState": "useState"
+    "useState": "useState",
+    "input": "input값 관리"
 }

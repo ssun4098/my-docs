@@ -1,0 +1,77 @@
+# useState를 이용해서 input 상태 관리
+```javascript
+import { useState } from 'react';
+
+function MyComponent() {
+  const [keyword, setKeyword] = useState('');
+
+
+  const handleKeyword = (event) => setKeyword(event.target.value);
+  
+  return (  
+    <>
+      <input type='text' onChange={handleKeyword} />
+    </>
+  )
+}
+
+export default MyComponent;
+```
+
+onChange를 통해 값이 변화할 때 마다 input DOM에서 e.target.value를 조회하면서 useState에서 값을 관리한다.
+
+# 여러 개의 input 관리
+input이 많아지면 그만큼 onChange 메서드와 useState를 추가하여 관리할 수 있지만 더 좋은 방법은 input에 name을 설정하고 이벤트가 발생했을 때 참조하는 방법이다. <br />
+그리고 useState 에서는 문자열이 아니라 객체 형태의 상태를 관리해야한다.
+```javascript
+import { useState } from 'react';
+
+function MyComponent() {
+  const [inputs, setInputs] = useState({
+    name: '',
+    nickname: ''
+  });
+
+    const {name, nickname} = inputs;
+
+
+    const onChange = (e) => {
+    const { value, name } = e.target;
+    setInputs({
+      ...inputs, // 기존의 input 객체를 복사한 뒤
+      [name]: value // name 키를 가진 값을 value 로 설정
+    });
+  };
+
+  const onReset = () => {
+    setInputs({
+      name: '',
+      nickname: '',
+    })
+  };
+  
+  return (  
+    <>
+      <input name="name" placeholder="이름" onChange={onChange} value={name} />
+      <input name="nickname" placeholder="닉네임" onChange={onChange} value={nickname}/>
+      <button onClick={onReset}>초기화</button>
+      <div>
+        <b>값: </b>
+        {name} ({nickname})
+      </div>
+    </>
+  )
+}
+
+export default MyComponent;
+```
+
+리액트에서는 상태를 수정할 떄 `inputs[name] = value;`와 같이 수정하면 안된다. 대신 새로운 객체를 만들어서 이를 상태로 사용해주어야 한다.
+```javascript
+setInputs({
+  ...inputs,
+  [name]: value
+});
+```
+이러한 작업을 "불변성을 지킨다"라고 부르며 불변성을 지켜주어야만 리액트 컴포넌트에서 상태가 업데이트를 감지할 수 있다. 리액트에서는 객체를 업데이트 하게 될 때는 기존 객체를 직접 수정하면 안되고
+새로운 객체를 만들어서 새 객체에 변화를 주여야 한다.
